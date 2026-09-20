@@ -1,5 +1,7 @@
 import pandas as pd
-
+# =======================================================
+# PASO 1 - LEER DATA SET E IDENTIFICAR COLUMNAS
+# ======================================================
 file_id = "1sqrRHPmPPcc28KmkTlJfZZZGBKbEFsgg"
 
 url = f"https://drive.google.com/uc?export=download&id={file_id}"
@@ -22,7 +24,7 @@ print("=" * 60)
 print(df.columns)
 
 # =======================================================
-# BUSCAR DUPLICADOS
+# PASO 2 - BUSCAR DUPLICADOS
 # ======================================================
 
 duplicados = df[
@@ -40,7 +42,7 @@ print(duplicados)
 
 
 # ============================================================ 
-# ELIMINAR DUPLICADOS 
+# PASO 3  - ELIMINAR DUPLICADOS 
 # ============================================================ 
 df_limpio = df.drop_duplicates( subset=['ID_Transaccion'], keep='first' ).copy() 
 print("\n")
@@ -54,7 +56,7 @@ print("Filas después de eliminar duplicados:", len(df_limpio))
 # PASO 4 - LIMPIAR NOMBRES DE CLIENTES
 # ============================================================
 
-print("ANTES DE LIMPIAR CLIENTE_NOMBRE")
+print("\nANTES DE LIMPIAR CLIENTE_NOMBRE")
 print("=" * 60)
 
 print(df_limpio['Cliente_Nombre'])
@@ -67,7 +69,7 @@ df_limpio['Cliente_Nombre'] = (
     .str.lower()
 )
 
-print("DESPUÉS DE LIMPIAR CLIENTE_NOMBRE")
+print("\nDESPUÉS DE LIMPIAR CLIENTE_NOMBRE")
 print("=" * 60)
 
 print(df_limpio['Cliente_Nombre'])
@@ -434,3 +436,6 @@ print("\nDATAFRAME FINAL")
 print("=" * 60)
 
 print(df_transformado)
+df_transformado.to_excel("datos_ventas.xlsx", index=False)
+
+print("Archivo Excel creado correctamente.")
