@@ -12,19 +12,6 @@ df = pd.read_csv(url)
 
 print(df.head())
 
-# print("\nVALORES ORIGINALES DE PRECIO")
-# print("=" * 60)
-# print(df['precio'].head(20))
-
-# print("\nTIPO DE DATO DE PRECIO")
-# print(df['precio'].dtype)
-
-# print("\nVALORES ORIGINALES DE PRECIO")
-# print("=" * 60)
-# print(df['precio'].head(20))
-
-# print("\nTIPO DE DATO DE PRECIO")
-# print(df['precio'].dtype)
 
 print("\n" + "="*50 + "\n")
 print("LIMPIEZA DE DATOS")
@@ -187,40 +174,10 @@ print("=" * 60)
 print(df_limpio['precio']) 
 print( "\nPrecios faltantes:", df_limpio['precio'].isna().sum() )
 
-# # ============================================================
-# # PASO 10 - LIMPIAR MÉTODO DE PAGO
-# # ============================================================
 
-# print("\n")
-# print("MÉTODO DE PAGO ORIGINAL")
-# print("=" * 60)
-
-# print(df_limpio['Metodo_Pago'])
-# # Limpiar espacios y convertir a minúsculas
-
-# df_limpio['Metodo_Pago'] = (
-#     df_limpio['Metodo_Pago']
-#     .astype(str)
-#     .str.strip()
-#     .str.lower()
-# )
-# print("\n")
-# print("MÉTODO DE PAGO LIMPIO")
-# print("=" * 60)
-
-# print(df_limpio['Metodo_Pago'])
-
-# # ============================================================ 
-# # PASO 11 - REEMPLAZAR BTC_CRYPTO 
-# # ============================================================ 
-# df_limpio['Metodo_Pago'] = ( df_limpio['Metodo_Pago'] .replace( 'btc_crypto', 'desconocido' ) ) 
-# print("\n")
-# print("MÉTODO DE PAGO DESPUÉS DEL REEMPLAZO") 
-# print("=" * 60) 
-# print(df_limpio['Metodo_Pago'])
 
 # ============================================================
-# PASO 12 - CONVERTIR FECHAS
+# PASO 10 - CONVERTIR FECHAS
 # ============================================================
 print("\n")
 print("FECHAS ORIGINALES")
@@ -244,7 +201,7 @@ print(fecha_transformada)
 print("\nTipo de dato:") 
 print(fecha_transformada.dtype)
 
-# PASO 13 - BUSCAR FECHAS INVÁLIDAS
+# PASO 11 - BUSCAR FECHAS INVÁLIDAS
 # ============================================================
 print("\n")
 print("FECHAS INVÁLIDAS")
@@ -256,7 +213,7 @@ print(
     ]
 )
 # ============================================================
-# PASO 14 - FORMATEAR LAS FECHAS
+# PASO 12 - FORMATEAR LAS FECHAS
 # ============================================================
 
 df_limpio['fecha_venta'] = (
@@ -269,7 +226,7 @@ print("=" * 60)
 
 print(df_limpio['fecha_venta'])
 # ============================================================
-# PASO 15 - REEMPLAZAR FECHAS FALTANTES
+# PASO 13 - REEMPLAZAR FECHAS FALTANTES
 # ============================================================
 
 df_limpio['fecha_venta'] = (
@@ -283,7 +240,7 @@ print("=" * 60)
 print(df_limpio['fecha_venta'])
 
 # ============================================================
-# PASO 16 - CALCULAR TOTAL_CALCULADO 
+# PASO 14 - CALCULAR TOTAL_CALCULADO 
 # ============================================================ 
 df_limpio['Total_Calculado'] = ( df_limpio['cantidad'] * df_limpio['precio'] ) 
 print("\n")
@@ -292,7 +249,7 @@ print("=" * 60)
 print( df_limpio[ [ 'cantidad', 'precio', 'Total_Calculado' ] ] )
 
 # ============================================================
-# PASO 17 - CREAR DF_TRANSFORMADO
+# PASO 15 - CREAR DF_TRANSFORMADO
 # ============================================================
 
 df_transformado = df_limpio.drop(
@@ -305,7 +262,7 @@ print("=" * 60)
 
 print(df_transformado)
 # ============================================================
-# PASO 18 - ELIMINAR CATEGORÍAS ERRÓNEAS
+# PASO 16 - ELIMINAR CATEGORÍAS ERRÓNEAS
 # ============================================================
 
 df_transformado = df_transformado[
@@ -319,7 +276,7 @@ print("=" * 60)
 
 print(df_transformado)
 # ============================================================
-# PASO 19 - REINICIAR LOS ÍNDICES
+# PASO 17 - REINICIAR LOS ÍNDICES
 # ============================================================
 
 df_transformado = (
@@ -332,7 +289,7 @@ print("=" * 60)
 
 print(df_transformado)
 # ============================================================
-# PASO 20 - CREAR DICCIONARIO DE DÍAS
+# PASO 18 - CREAR DICCIONARIO DE DÍAS
 # Se utiliza para traducir los nombres de los días al español.
 # ============================================================
 
@@ -356,7 +313,7 @@ dias_es = {
 print(dias_es)
 
 # ============================================================
-# PASO 21 - OBTENER EL DÍA DE LA SEMANA
+# PASO 19 - OBTENER EL DÍA DE LA SEMANA
 # ============================================================
 
 dias_ingles = (
@@ -373,7 +330,7 @@ print("=" * 60)
 
 print(dias_ingles)
 # ============================================================
-# PASO 22 - TRADUCIR LOS DÍAS AL ESPAÑOL
+# PASO 20 - TRADUCIR LOS DÍAS AL ESPAÑOL
 # ============================================================
 
 df_transformado['Dia_Venta'] = (
@@ -397,7 +354,7 @@ print(
 
 
 # ============================================================
-# PASO 23 - GROUPBY
+# PASO 21 - GROUPBY
 # FACTURACIÓN POR PRODUCTO
 # ============================================================
 
@@ -422,7 +379,7 @@ print(productos)
 
 
 # ============================================================
-# PASO 24 - PIVOT TABLE
+# PASO 22 - PIVOT TABLE
 # ============================================================
 
 tabla_matriz = (
@@ -441,7 +398,7 @@ print("=" * 60)
 
 print(tabla_matriz)
 # ============================================================
-# PASO 25 - VER EL DATAFRAME FINAL
+# PASO 23 - VER EL DATAFRAME FINAL
 # ============================================================
 
 print("\nDATAFRAME FINAL")
