@@ -2,13 +2,29 @@ import pandas as pd
 # =======================================================
 # PASO 1 - LEER DATA SET E IDENTIFICAR COLUMNAS
 # ======================================================
-file_id = "1sqrRHPmPPcc28KmkTlJfZZZGBKbEFsgg"
+#file_id = "1sqrRHPmPPcc28KmkTlJfZZZGBKbEFsgg"
+
+file_id = "1jlo-TjeDEkIeHrbcdSVXO8pqzTTfyE6N"
 
 url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
 df = pd.read_csv(url)
 
-df.head()
+print(df.head())
+
+# print("\nVALORES ORIGINALES DE PRECIO")
+# print("=" * 60)
+# print(df['precio'].head(20))
+
+# print("\nTIPO DE DATO DE PRECIO")
+# print(df['precio'].dtype)
+
+# print("\nVALORES ORIGINALES DE PRECIO")
+# print("=" * 60)
+# print(df['precio'].head(20))
+
+# print("\nTIPO DE DATO DE PRECIO")
+# print(df['precio'].dtype)
 
 print("\n" + "="*50 + "\n")
 print("LIMPIEZA DE DATOS")
@@ -29,7 +45,7 @@ print(df.columns)
 
 duplicados = df[
     df.duplicated(
-        subset=['ID_Transaccion'],
+        subset=['id_venta'],
         keep='first'
     )
 ]
@@ -44,7 +60,7 @@ print(duplicados)
 # ============================================================ 
 # PASO 3  - ELIMINAR DUPLICADOS 
 # ============================================================ 
-df_limpio = df.drop_duplicates( subset=['ID_Transaccion'], keep='first' ).copy() 
+df_limpio = df.drop_duplicates( subset=['id_venta'], keep='first' ).copy() 
 print("\n")
 print("DATAFRAME DESPUÉS DE ELIMINAR DUPLICADOS") 
 print("=" * 60) 
@@ -53,100 +69,95 @@ print("\nFilas originales:", len(df))
 print("Filas después de eliminar duplicados:", len(df_limpio))
 
 # ============================================================
-# PASO 4 - LIMPIAR NOMBRES DE CLIENTES
+# PASO 4 - LIMPIAR NOMBRES DE PRODUCTOS
 # ============================================================
 
-print("\nANTES DE LIMPIAR CLIENTE_NOMBRE")
+print("\nANTES DE LIMPIAR PRODUCTO")
 print("=" * 60)
 
-print(df_limpio['Cliente_Nombre'])
+print(df_limpio['producto'])
 # Ahora limpiamos los nombres
 
-df_limpio['Cliente_Nombre'] = (
-    df_limpio['Cliente_Nombre']
-    .astype(str)
+df_limpio['producto'] = (
+    df_limpio['producto']
     .str.strip()
     .str.lower()
 )
 
-print("\nDESPUÉS DE LIMPIAR CLIENTE_NOMBRE")
+print("\nDESPUÉS DE LIMPIAR producto")
 print("=" * 60)
 
-print(df_limpio['Cliente_Nombre'])
+print(df_limpio['producto'])
 
 # PASO 5 - LIMPIAR CATEGORÍAS
 # ============================================================
 
-print("ANTES DE LIMPIAR CATEGORIA_PRODUCTO")
+print("ANTES DE LIMPIAR categoria")
 print("=" * 60)
 
-print(df_limpio['Categoria_Producto'])
+print(df_limpio['categoria'])
 # Limpiar categorías
 
-df_limpio['Categoria_Producto'] = (
-    df_limpio['Categoria_Producto']
-    .astype(str)
+df_limpio['categoria'] = (
+    df_limpio['categoria']
     .str.strip()
     .str.lower()
 )
 
-print("DESPUÉS DE LIMPIAR CATEGORIA_PRODUCTO")
+print("DESPUÉS DE LIMPIAR categoria")
 print("=" * 60)
 
-print(df_limpio['Categoria_Producto'])
+print(df_limpio['categoria'])
 
 
 # ============================================================
 # PASO 6 - PREPARAR EL PRECIO
 # ============================================================
+
 print("\n")
 print("PRECIO ORIGINAL")
 print("=" * 60)
 
-print(df_limpio['Precio_Unitario'])
-# Convertimos el precio a texto
+print(df_limpio['precio'])
 
-df_limpio['Precio_Unitario'] = (
-    df_limpio['Precio_Unitario']
-    .astype(str)
+# Eliminar el signo $
+df_limpio['precio'] = (
+    df_limpio['precio']
+    .str.replace('$', '', regex=False)
+    .str.strip()
 )
-print("\n")
-print("PRECIO CONVERTIDO A TEXTO")
+
+print("\nPRECIO SIN SIGNO $")
 print("=" * 60)
 
-print(df_limpio['Precio_Unitario'])
+print(df_limpio['precio'])
+
 # Cambiar coma decimal por punto
-
-df_limpio['Precio_Unitario'] = (
-    df_limpio['Precio_Unitario']
-    .str.replace(',', '.')
+df_limpio['precio'] = (
+    df_limpio['precio']
+    .str.replace(',', '.', regex=False)
 )
-print("\n")
-print("DESPUÉS DE CAMBIAR COMA POR PUNTO")
+
+print("\nDESPUÉS DE CAMBIAR COMA POR PUNTO")
 print("=" * 60)
 
-print(df_limpio['Precio_Unitario'])
-# Convertir el precio a número
+print(df_limpio['precio'])
 
-df_limpio['Precio_Unitario'] = pd.to_numeric(
-    df_limpio['Precio_Unitario'],
+# Convertir el precio a número
+df_limpio['precio'] = pd.to_numeric(
+    df_limpio['precio'],
     errors='coerce'
 )
 
-print("\n")
-print("PRECIO CONVERTIDO A NÚMERO")
+print("\nPRECIO CONVERTIDO A NÚMERO")
 print("=" * 60)
 
-print(df_limpio['Precio_Unitario'])
+print(df_limpio['precio'])
 
-# Convertir el precio a número 
-df_limpio['Precio_Unitario'] = pd.to_numeric( df_limpio['Precio_Unitario'], errors='coerce' ) 
+print("\nTIPO DE DATO")
+print("=" * 60)
 
-print("\n")
-print("TIPO DE DATO") 
-print("=" * 60) 
-print("\nTipo de dato:") 
-print(df_limpio['Precio_Unitario'].dtype)
+print(df_limpio['precio'].dtype)
 
 # ============================================================ 
 # PASO 7 - BUSCAR VALORES FALTANTES EN EL PRECIO 
@@ -154,13 +165,13 @@ print(df_limpio['Precio_Unitario'].dtype)
 print("\n")
 print("VALORES FALTANTES EN PRECIO") 
 print("=" * 60) 
-print(df_limpio['Precio_Unitario'].isna()) 
-print( "\nCantidad de precios faltantes:", df_limpio['Precio_Unitario'].isna().sum() )
+print(df_limpio['precio'].isna()) 
+print( "\ncantidad de precios faltantes:", df_limpio['precio'].isna().sum() )
 
 # ============================================================ 
 # PASO 8 - CALCULAR LA MEDIA DEL PRECIO 
 # ============================================================ 
-media_precio = ( df_limpio['Precio_Unitario'] .mean() ) 
+media_precio = ( df_limpio['precio'] .mean() ) 
 print("\n")
 print("MEDIA DEL PRECIO") 
 print("=" * 60) 
@@ -169,44 +180,44 @@ print(media_precio)
 # ============================================================ 
 # PASO 9 - REEMPLAZAR VALORES FALTANTES 
 # ============================================================ 
-df_limpio['Precio_Unitario'] = ( df_limpio['Precio_Unitario'] .fillna(media_precio) ) 
+df_limpio['precio'] = ( df_limpio['precio'] .fillna(media_precio) ) 
 print("\n")
 print("PRECIO DESPUÉS DE FILLNA") 
 print("=" * 60) 
-print(df_limpio['Precio_Unitario']) 
-print( "\nPrecios faltantes:", df_limpio['Precio_Unitario'].isna().sum() )
+print(df_limpio['precio']) 
+print( "\nPrecios faltantes:", df_limpio['precio'].isna().sum() )
 
-# ============================================================
-# PASO 10 - LIMPIAR MÉTODO DE PAGO
-# ============================================================
+# # ============================================================
+# # PASO 10 - LIMPIAR MÉTODO DE PAGO
+# # ============================================================
 
-print("\n")
-print("MÉTODO DE PAGO ORIGINAL")
-print("=" * 60)
+# print("\n")
+# print("MÉTODO DE PAGO ORIGINAL")
+# print("=" * 60)
 
-print(df_limpio['Metodo_Pago'])
-# Limpiar espacios y convertir a minúsculas
+# print(df_limpio['Metodo_Pago'])
+# # Limpiar espacios y convertir a minúsculas
 
-df_limpio['Metodo_Pago'] = (
-    df_limpio['Metodo_Pago']
-    .astype(str)
-    .str.strip()
-    .str.lower()
-)
-print("\n")
-print("MÉTODO DE PAGO LIMPIO")
-print("=" * 60)
+# df_limpio['Metodo_Pago'] = (
+#     df_limpio['Metodo_Pago']
+#     .astype(str)
+#     .str.strip()
+#     .str.lower()
+# )
+# print("\n")
+# print("MÉTODO DE PAGO LIMPIO")
+# print("=" * 60)
 
-print(df_limpio['Metodo_Pago'])
+# print(df_limpio['Metodo_Pago'])
 
-# ============================================================ 
-# PASO 11 - REEMPLAZAR BTC_CRYPTO 
-# ============================================================ 
-df_limpio['Metodo_Pago'] = ( df_limpio['Metodo_Pago'] .replace( 'btc_crypto', 'desconocido' ) ) 
-print("\n")
-print("MÉTODO DE PAGO DESPUÉS DEL REEMPLAZO") 
-print("=" * 60) 
-print(df_limpio['Metodo_Pago'])
+# # ============================================================ 
+# # PASO 11 - REEMPLAZAR BTC_CRYPTO 
+# # ============================================================ 
+# df_limpio['Metodo_Pago'] = ( df_limpio['Metodo_Pago'] .replace( 'btc_crypto', 'desconocido' ) ) 
+# print("\n")
+# print("MÉTODO DE PAGO DESPUÉS DEL REEMPLAZO") 
+# print("=" * 60) 
+# print(df_limpio['Metodo_Pago'])
 
 # ============================================================
 # PASO 12 - CONVERTIR FECHAS
@@ -215,11 +226,11 @@ print("\n")
 print("FECHAS ORIGINALES")
 print("=" * 60)
 
-print(df_limpio['Fecha_Venta'])
+print(df_limpio['fecha_venta'])
 # Convertir las fechas a datetime
 
 fecha_transformada = pd.to_datetime(
-    df_limpio['Fecha_Venta'],
+    df_limpio['fecha_venta'],
     format='mixed',
     dayfirst=True,
     errors='coerce'
@@ -248,7 +259,7 @@ print(
 # PASO 14 - FORMATEAR LAS FECHAS
 # ============================================================
 
-df_limpio['Fecha_Venta'] = (
+df_limpio['fecha_venta'] = (
     fecha_transformada
     .dt.strftime('%d-%m-%Y')
 )
@@ -256,36 +267,37 @@ print("\n")
 print("FECHAS FORMATEADAS")
 print("=" * 60)
 
-print(df_limpio['Fecha_Venta'])
+print(df_limpio['fecha_venta'])
 # ============================================================
 # PASO 15 - REEMPLAZAR FECHAS FALTANTES
 # ============================================================
 
-df_limpio['Fecha_Venta'] = (
-    df_limpio['Fecha_Venta']
+df_limpio['fecha_venta'] = (
+    df_limpio['fecha_venta']
     .fillna('Sin Fecha')
 )
 print("\n")
 print("FECHAS DESPUÉS DE FILLNA")
 print("=" * 60)
 
-print(df_limpio['Fecha_Venta'])
+print(df_limpio['fecha_venta'])
 
 # ============================================================
 # PASO 16 - CALCULAR TOTAL_CALCULADO 
 # ============================================================ 
-df_limpio['Total_Calculado'] = ( df_limpio['Cantidad'] * df_limpio['Precio_Unitario'] ) 
+df_limpio['Total_Calculado'] = ( df_limpio['cantidad'] * df_limpio['precio'] ) 
 print("\n")
 print("TOTAL CALCULADO") 
 print("=" * 60) 
-print( df_limpio[ [ 'Cantidad', 'Precio_Unitario', 'Total_Calculado' ] ] )
+print( df_limpio[ [ 'cantidad', 'precio', 'Total_Calculado' ] ] )
 
 # ============================================================
 # PASO 17 - CREAR DF_TRANSFORMADO
 # ============================================================
 
 df_transformado = df_limpio.drop(
-    columns=['Estatus_Auditoria']
+    columns=['Estatus_Auditoria'],
+    errors='ignore'
 )
 
 print("\nDF_TRANSFORMADO")
@@ -297,7 +309,7 @@ print(df_transformado)
 # ============================================================
 
 df_transformado = df_transformado[
-    df_transformado['Categoria_Producto']
+    df_transformado['categoria']
     !=
     'error_cat'
 ]
@@ -321,6 +333,7 @@ print("=" * 60)
 print(df_transformado)
 # ============================================================
 # PASO 20 - CREAR DICCIONARIO DE DÍAS
+# Se utiliza para traducir los nombres de los días al español.
 # ============================================================
 
 dias_es = {
@@ -347,7 +360,11 @@ print(dias_es)
 # ============================================================
 
 dias_ingles = (
-    fecha_transformada
+    pd.to_datetime(
+        df_transformado['fecha_venta'],
+        format='%d-%m-%Y',
+        errors='coerce'
+    )
     .dt.day_name()
 )
 
@@ -360,8 +377,7 @@ print(dias_ingles)
 # ============================================================
 
 df_transformado['Dia_Venta'] = (
-    fecha_transformada
-    .dt.day_name()
+    dias_ingles
     .map(dias_es)
 )
 
@@ -369,21 +385,29 @@ print("\nDATAFRAME CON DIA_VENTA")
 print("=" * 60)
 
 print(df_transformado)
+
+print("\nVERIFICACIÓN DE FACTURACIÓN")
+print("=" * 60)
+
+print(
+    df_transformado[
+        ['id_venta', 'producto', 'cantidad', 'precio', 'Total_Calculado']
+    ].head(20)
+)
+
+
 # ============================================================
 # PASO 23 - GROUPBY
-# FACTURACIÓN POR CLIENTE
+# FACTURACIÓN POR PRODUCTO
 # ============================================================
 
-clientes = (
-    df_limpio
-    .groupby('Cliente_Nombre')
-    ['Total_Calculado']
+productos = (
+    df_transformado
+    .groupby('producto')
     .agg(
-        Facturacion_Total='sum',
-
-        Cantidad_compras='count',
-
-        Transacciones='count'
+        Facturacion_Total=('Total_Calculado', 'sum'),
+        cantidad_compras=('cantidad', 'sum'),
+        Transacciones=('id_venta', 'count')
     )
     .sort_values(
         by='Facturacion_Total',
@@ -391,10 +415,12 @@ clientes = (
     )
 )
 
-print("\nFACTURACIÓN POR CLIENTE")
+print("\nFACTURACIÓN POR PRODUCTO")
 print("=" * 60)
 
-print(clientes)
+print(productos)
+
+
 # ============================================================
 # PASO 24 - PIVOT TABLE
 # ============================================================
@@ -402,24 +428,10 @@ print(clientes)
 tabla_matriz = (
     df_limpio
     .pivot_table(
-
-        index='Cliente_Nombre',
-
-        columns=[
-            'Categoria_Producto',
-            'Metodo_Pago'
-        ],
-
-        values=[
-            'Total_Calculado',
-            'Cantidad'
-        ],
-
-        aggfunc=[
-            'sum',
-            'max'
-        ],
-
+        index='producto',
+        columns='categoria',
+        values='Total_Calculado',
+        aggfunc='sum',
         fill_value=0
     )
 )
